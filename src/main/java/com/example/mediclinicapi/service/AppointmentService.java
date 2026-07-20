@@ -80,4 +80,16 @@ public class AppointmentService {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
     }
+
+    @Transactional
+    public Appointment cancel(Long id) {
+        var appointment = findById(id);
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new IllegalArgumentException("Appointment is already cancelled");
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        return appointmentRepository.save(appointment);
+    }
 }
