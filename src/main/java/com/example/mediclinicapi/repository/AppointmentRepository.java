@@ -9,4 +9,6 @@ import java.time.LocalDateTime;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     Boolean existsByDoctorIdAndDateTimeAndStatusNot(Long doctorId, LocalDateTime dateTime, AppointmentStatus status);
+
+    Boolean existsByPatientIdAndDateTimeAndStatusNot(Long patientId, LocalDateTime dateTime, AppointmentStatus status);
 }
