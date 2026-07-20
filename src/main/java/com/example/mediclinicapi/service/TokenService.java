@@ -21,7 +21,7 @@ public class TokenService {
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
-                    .withIssuer("medclinic-api")
+                    .withIssuer("mediclinic-api")
                     .withSubject(user.getEmail())
                     .withClaim("role",user.getRole().name())
                     .withExpiresAt(expirationDate())
