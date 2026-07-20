@@ -12,14 +12,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DatabaseSeeder implements CommandLineRunner {
 
+    private static final String ADMIN_EMAIL = "admin@mediclinic.com";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.count() == 0) {
+        if (userRepository.findByEmail(ADMIN_EMAIL).isEmpty()) {
             User admin = new User();
-            admin.setEmail("admin@mediclinic.com");
+            admin.setEmail(ADMIN_EMAIL);
 
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole(Role.ADMIN);
