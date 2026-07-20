@@ -2,6 +2,7 @@ package com.example.mediclinicapi.controller;
 
 import com.example.mediclinicapi.domain.Appointment;
 import com.example.mediclinicapi.dto.appointment.AppointmentResponse;
+import com.example.mediclinicapi.dto.appointment.CompleteAppointmentRequest;
 import com.example.mediclinicapi.dto.appointment.CreateAppointmentRequest;
 import com.example.mediclinicapi.service.AppointmentService;
 import jakarta.validation.Valid;
@@ -55,6 +56,14 @@ public class AppointmentController {
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<AppointmentResponse> cancel(@PathVariable Long id) {
         return ResponseEntity.ok(AppointmentResponse.from(appointmentService.cancel(id)));
+    }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<AppointmentResponse> complete(
+            @PathVariable Long id,
+            @RequestBody CompleteAppointmentRequest request
+    ) {
+        return ResponseEntity.ok(AppointmentResponse.from(appointmentService.complete(id, request)));
     }
 
     private List<Appointment> findAppointments(Long doctorId, Long patientId) {
