@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,11 @@ public class AppointmentController {
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(AppointmentResponse.from(appointmentService.findById(id)));
+    }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<AppointmentResponse> cancel(@PathVariable Long id) {
+        return ResponseEntity.ok(AppointmentResponse.from(appointmentService.cancel(id)));
     }
 
     private List<Appointment> findAppointments(Long doctorId, Long patientId) {
