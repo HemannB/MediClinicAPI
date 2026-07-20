@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   medclinic-db:
     image: postgres:16-alpine
     container_name: medclinic-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_DB=medclinic_db
       - POSTGRES_USER=postgres
