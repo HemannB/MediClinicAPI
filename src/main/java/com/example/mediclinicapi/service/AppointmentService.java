@@ -3,6 +3,7 @@ package com.example.mediclinicapi.service;
 import com.example.mediclinicapi.domain.Appointment;
 import com.example.mediclinicapi.domain.enums.AppointmentStatus;
 import com.example.mediclinicapi.domain.enums.Role;
+import com.example.mediclinicapi.dto.appointment.CompleteAppointmentRequest;
 import com.example.mediclinicapi.dto.appointment.CreateAppointmentRequest;
 import com.example.mediclinicapi.repository.AppointmentRepository;
 import com.example.mediclinicapi.repository.PatientRepository;
@@ -90,6 +91,24 @@ public class AppointmentService {
         }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
+        return appointmentRepository.save(appointment);
+    }
+
+    @Transactional
+    public Appointment complete(Long id, CompleteAppointmentRequest request) {
+        var appointment = findById(id);
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new IllegalArgumentException("Cancelled appointments cannot be completed");
+        }
+
+        if (appointment.getStatus() == AppointmentStatus.REALIZED) {
+            throw new IllegalArgumentException("Appointment is already completed");
+        }
+
+        appointment.setMedicalNotes(request.medicalNotes());
+        appointment.setStatus(AppointmentStatus.REALIZED);
+
         return appointmentRepository.save(appointment);
     }
 }
