@@ -5,6 +5,7 @@ import com.example.mediclinicapi.domain.enums.Role;
 import com.example.mediclinicapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -14,18 +15,22 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DatabaseSeeder implements CommandLineRunner {
 
-    private static final String ADMIN_EMAIL = "admin@mediclinic.com";
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${api.seed.admin.email:admin@mediclinic.com}")
+    private String adminEmail;
+
+    @Value("${api.seed.admin.password:admin123}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.findByEmail(ADMIN_EMAIL).isEmpty()) {
+        if (userRepository.findByEmail(adminEmail).isEmpty()) {
             User admin = new User();
-            admin.setEmail(ADMIN_EMAIL);
+            admin.setEmail(adminEmail);
 
-            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setRole(Role.ADMIN);
 
             userRepository.save(admin);
