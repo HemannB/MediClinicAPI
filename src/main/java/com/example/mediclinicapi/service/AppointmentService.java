@@ -57,6 +57,25 @@ public class AppointmentService {
         return appointmentRepository.findAll();
     }
 
+    public List<Appointment> findByDoctorId(Long doctorId) {
+        var doctor = userRepository.findById(doctorId)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
+
+        if (doctor.getRole() != Role.DOCTOR) {
+            throw new EntityNotFoundException("Doctor not found");
+        }
+
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
+
+    public List<Appointment> findByPatientId(Long patientId) {
+        if (!patientRepository.existsById(patientId)) {
+            throw new EntityNotFoundException("Patient not found");
+        }
+
+        return appointmentRepository.findByPatientId(patientId);
+    }
+
     public Appointment findById(Long id) {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
