@@ -16,7 +16,7 @@ public class Patient {
     private Long id;
 
     @Column(nullable = false)
-    private String fisrtName;
+    private String firstName;
 
     @Column(nullable = false)
     private String lastName;
@@ -30,4 +30,3 @@ public class Patient {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
-
