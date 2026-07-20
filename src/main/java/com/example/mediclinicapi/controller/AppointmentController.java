@@ -1,5 +1,6 @@
 package com.example.mediclinicapi.controller;
 
+import com.example.mediclinicapi.domain.Appointment;
 import com.example.mediclinicapi.dto.appointment.AppointmentResponse;
 import com.example.mediclinicapi.dto.appointment.CreateAppointmentRequest;
 import com.example.mediclinicapi.service.AppointmentService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -33,8 +35,11 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppointmentResponse>> findAll() {
-        var appointments = appointmentService.findAll().stream()
+    public ResponseEntity<List<AppointmentResponse>> findAll(
+            @RequestParam(required = false) Long doctorId,
+            @RequestParam(required = false) Long patientId
+    ) {
+        var appointments = findAppointments(doctorId, patientId).stream()
                 .map(AppointmentResponse::from)
                 .toList();
 
@@ -44,5 +49,21 @@ public class AppointmentController {
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(AppointmentResponse.from(appointmentService.findById(id)));
+    }
+
+    private List<Appointment> findAppointments(Long doctorId, Long patientId) {
+        if (doctorId != null && patientId != null) {
+            throw new IllegalArgumentException("Use only one appointment filter at a time");
+        }
+
+        if (doctorId != null) {
+            return appointmentService.findByDoctorId(doctorId);
+        }
+
+        if (patientId != null) {
+            return appointmentService.findByPatientId(patientId);
+        }
+
+        return appointmentService.findAll();
     }
 }
